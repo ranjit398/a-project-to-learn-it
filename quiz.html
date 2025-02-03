@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6">
+        <h1 class="text-2xl font-bold mb-4">Quiz App</h1>
+        <div id="quizContainer" class="space-y-4">
+            <h2 id="question" class="text-xl"></h2>
+            <div id="options" class="space-y-2"></div>
+            <p id="score" class="font-bold"></p>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What is 2 + 2?",
+                options: ["3", "4", "5", "6"],
+                answer: 1
+            },
+            {
+                question: "Which language runs in browsers?",
+                options: ["Java", "Python", "JavaScript", "C++"],
+                answer: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('question').textContent = question.question;
+            const optionsHtml = question.options.map((option, index) => `
+                <button onclick="checkAnswer(${index})" 
+                        class="w-full p-2 text-left rounded-lg bg-gray-100 hover:bg-gray-200">
+                    ${option}
+                </button>
+            `).join('');
+            document.getElementById('options').innerHTML = optionsHtml;
+            document.getElementById('score').textContent = `Score: ${score}`;
+        }
+
+        function checkAnswer(selectedIndex) {
+            if(selectedIndex === questions[currentQuestion].answer) {
+                score++;
+            }
+            currentQuestion++;
+            if(currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                document.getElementById('quizContainer').innerHTML = `
+                    <h2 class="text-xl">Quiz Complete!</h2>
+                    <p class="text-2xl">Your Score: ${score}/${questions.length}</p>
+                `;
+            }
+        }
+
+        showQuestion();
+    </script>
+</body>
+</html>

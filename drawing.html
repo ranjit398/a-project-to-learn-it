@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drawing App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        canvas {
+            touch-action: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+        <div class="flex gap-4 mb-4">
+            <input type="color" id="colorPicker" class="w-12 h-12">
+            <input type="range" id="brushSize" min="1" max="50" value="5" class="w-32">
+        </div>
+        <canvas id="canvas" class="border-2 border-gray-200 rounded-lg"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
+        canvas.width = window.innerWidth - 100;
+        canvas.height = 500;
+
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 5;
+
+        function startDrawing(e) {
+            isDrawing = true;
+            draw(e);
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            ctx.lineCap = 'round';
+            ctx.lineTo(
+                e.clientX - canvas.offsetLeft,
+                e.clientY - canvas.offsetTop
+            );
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(
+                e.clientX - canvas.offsetLeft,
+                e.clientY - canvas.offsetTop
+            );
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        document.getElementById('colorPicker').addEventListener('input', (e) => {
+            ctx.strokeStyle = e.target.value;
+        });
+
+        document.getElementById('brushSize').addEventListener('input', (e) => {
+            ctx.lineWidth = e.target.value;
+        });
+    </script>
+</body>
+</html>
